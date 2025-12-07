@@ -9,19 +9,19 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 /**
- * FeignClient for communicating with car-service.
+ * Client Feign pour communiquer avec car-service.
  */
 @FeignClient(name = "car-service", url = "${car.service.url:http://localhost:8081}")
 public interface CarServiceClient {
 
     /**
-     * Get car by ID from car-service.
+     * Obtenir la voiture par ID depuis car-service.
      */
     @GetMapping("/api/cars/{id}")
     ResponseEntity<Car> getCarById(@PathVariable Long id);
 
     /**
-     * Update car status in car-service.
+     * Mettre à jour le statut de la voiture dans car-service.
      */
     @PutMapping("/api/cars/{id}")
     ResponseEntity<Car> updateCar(@PathVariable Long id, @RequestBody Car car);

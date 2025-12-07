@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * REST controller for rental operations.
+ * Contrôleur REST pour les opérations de location.
  */
 @RestController
 @RequestMapping("/api/rentals")
-@Tag(name = "Rental Controller", description = "API endpoints for managing car rentals")
+@Tag(name = "Contrôleur de Location", description = "Points de terminaison API pour la gestion des locations de voitures")
 public class RentalController {
 
     private final RentalService rentalService;
@@ -27,36 +27,36 @@ public class RentalController {
     }
 
     @PostMapping
-    @Operation(summary = "Create a new rental", 
-               description = "Creates a new rental/reservation. Requires car availability check and payment processing.")
+    @Operation(summary = "Créer une nouvelle location", 
+               description = "Crée une nouvelle location/réservation. Nécessite une vérification de la disponibilité de la voiture et un traitement du paiement.")
     public ResponseEntity<Rental> createRental(@Valid @RequestBody RentalRequest request) {
         Rental rental = rentalService.createRental(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(rental);
     }
 
     @GetMapping
-    @Operation(summary = "Get all rentals", description = "Retrieves all rentals in the system")
+    @Operation(summary = "Obtenir toutes les locations", description = "Récupère toutes les locations dans le système")
     public ResponseEntity<List<Rental>> getAllRentals() {
         List<Rental> rentals = rentalService.getAllRentals();
         return ResponseEntity.ok(rentals);
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get rental by ID", description = "Retrieves a specific rental by its ID")
+    @Operation(summary = "Obtenir une location par ID", description = "Récupère une location spécifique par son ID")
     public ResponseEntity<Rental> getRentalById(@PathVariable Long id) {
         Rental rental = rentalService.getRentalById(id);
         return ResponseEntity.ok(rental);
     }
 
     @GetMapping("/client/{clientId}")
-    @Operation(summary = "Get rentals by client ID", description = "Retrieves all rentals for a specific client")
+    @Operation(summary = "Obtenir les locations par ID client", description = "Récupère toutes les locations pour un client spécifique")
     public ResponseEntity<List<Rental>> getRentalsByClientId(@PathVariable String clientId) {
         List<Rental> rentals = rentalService.getRentalsByClientId(clientId);
         return ResponseEntity.ok(rentals);
     }
 
     @GetMapping("/car/{carId}")
-    @Operation(summary = "Get rentals by car ID", description = "Retrieves all rentals for a specific car")
+    @Operation(summary = "Obtenir les locations par ID voiture", description = "Récupère toutes les locations pour une voiture spécifique")
     public ResponseEntity<List<Rental>> getRentalsByCarId(@PathVariable Long carId) {
         List<Rental> rentals = rentalService.getRentalsByCarId(carId);
         return ResponseEntity.ok(rentals);

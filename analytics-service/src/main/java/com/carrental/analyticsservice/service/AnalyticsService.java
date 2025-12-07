@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Service for calculating car occupancy analytics.
- * Calculates occupancy rates based on rental data from rental-service and car data from car-service.
+ * Service de calcul des analyses d'occupation des voitures.
+ * Calcule les taux d'occupation en fonction des données de location du service de location et des données de voiture du service de voiture.
  */
 @Service
 public class AnalyticsService {
@@ -30,15 +30,15 @@ public class AnalyticsService {
     }
 
     /**
-     * Calculate occupancy rates for all cars over a specified period.
-     * Defaults to the last 30 days if no dates are provided.
+     * Calculer les taux d'occupation pour toutes les voitures sur une période spécifiée.
+     * La valeur par défaut est les 30 derniers jours si aucune date n'est fournie.
      * 
      * @param startDate Start date of the period (optional)
      * @param endDate End date of the period (optional)
      * @return List of occupancy rates for all cars
      */
     public List<OccupancyRate> calculateOccupancyRates(LocalDate startDate, LocalDate endDate) {
-        // Set default period to last 30 days if not provided
+        // Définir la période par défaut aux 30 derniers jours si non fournie
         if (endDate == null) {
             endDate = LocalDate.now();
         }
@@ -53,7 +53,7 @@ public class AnalyticsService {
 
         long totalDaysInPeriod = ChronoUnit.DAYS.between(startDate, endDate) + 1;
 
-        // Fetch all cars
+        // Récupérer toutes les voitures
         ResponseEntity<List<Car>> carsResponse = carServiceClient.getAllCars();
         if (carsResponse.getStatusCode() != HttpStatus.OK || carsResponse.getBody() == null) {
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, 
@@ -62,7 +62,7 @@ public class AnalyticsService {
 
         List<Car> cars = carsResponse.getBody();
 
-        // Fetch all rentals
+        // Récupérer toutes les locations
         ResponseEntity<List<Rental>> rentalsResponse = rentalServiceClient.getAllRentals();
         if (rentalsResponse.getStatusCode() != HttpStatus.OK || rentalsResponse.getBody() == null) {
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, 
@@ -71,21 +71,21 @@ public class AnalyticsService {
 
         List<Rental> allRentals = rentalsResponse.getBody();
 
-        // Calculate occupancy for each car
+        // Calculer l'occupation pour chaque voiture
         List<OccupancyRate> occupancyRates = new ArrayList<>();
 
         for (Car car : cars) {
-            // Filter rentals for this car that are active or completed
+            // Filtrer les locations pour cette voiture qui sont actives ou terminées
             List<Rental> carRentals = allRentals.stream()
                 .filter(r -> r.getCarId().equals(car.getId()))
                 .filter(r -> "ACTIVE".equalsIgnoreCase(r.getStatus()) || 
                             "COMPLETED".equalsIgnoreCase(r.getStatus()))
                 .collect(Collectors.toList());
 
-            // Calculate rented days within the period
+            // Calculer les jours loués dans la période
             long rentedDays = calculateRentedDays(carRentals, startDate, endDate);
 
-            // Calculate occupancy percentage
+            // Calculer le pourcentage d'occupation
             double occupancyPercentage = totalDaysInPeriod > 0 
                 ? (double) rentedDays / totalDaysInPeriod * 100.0 
                 : 0.0;
@@ -108,7 +108,7 @@ public class AnalyticsService {
     }
 
     /**
-     * Calculate occupancy rate for a specific car.
+     * Calculer le taux d'occupation pour une voiture spécifique.
      * 
      * @param carId Car ID
      * @param startDate Start date of the period (optional)
@@ -116,7 +116,7 @@ public class AnalyticsService {
      * @return Occupancy rate for the specified car
      */
     public OccupancyRate calculateOccupancyRateForCar(Long carId, LocalDate startDate, LocalDate endDate) {
-        // Set default period to last 30 days if not provided
+        // Définir la période par défaut aux 30 derniers jours si non fournie
         if (endDate == null) {
             endDate = LocalDate.now();
         }
@@ -131,7 +131,7 @@ public class AnalyticsService {
 
         long totalDaysInPeriod = ChronoUnit.DAYS.between(startDate, endDate) + 1;
 
-        // Fetch car
+        // Récupérer la voiture
         ResponseEntity<Car> carResponse = carServiceClient.getCarById(carId);
         if (carResponse.getStatusCode() != HttpStatus.OK || carResponse.getBody() == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, 
@@ -140,7 +140,7 @@ public class AnalyticsService {
 
         Car car = carResponse.getBody();
 
-        // Fetch rentals for this car
+        // Récupérer les locations pour cette voiture
         ResponseEntity<List<Rental>> rentalsResponse = rentalServiceClient.getRentalsByCarId(carId);
         if (rentalsResponse.getStatusCode() != HttpStatus.OK || rentalsResponse.getBody() == null) {
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, 
@@ -152,10 +152,10 @@ public class AnalyticsService {
                         "COMPLETED".equalsIgnoreCase(r.getStatus()))
             .collect(Collectors.toList());
 
-        // Calculate rented days within the period
+        // Calculer les jours loués dans la période
         long rentedDays = calculateRentedDays(carRentals, startDate, endDate);
 
-        // Calculate occupancy percentage
+        // Calculer le pourcentage d'occupation
         double occupancyPercentage = totalDaysInPeriod > 0 
             ? (double) rentedDays / totalDaysInPeriod * 100.0 
             : 0.0;
@@ -173,7 +173,7 @@ public class AnalyticsService {
     }
 
     /**
-     * Calculate the total number of rented days for a list of rentals within a date range.
+     * Calculer le nombre total de jours loués pour une liste de locations dans une plage de dates.
      */
     private long calculateRentedDays(List<Rental> rentals, LocalDate startDate, LocalDate endDate) {
         long totalRentedDays = 0;
@@ -182,14 +182,14 @@ public class AnalyticsService {
             LocalDate rentalStart = rental.getStartDate().isBefore(startDate) ? startDate : rental.getStartDate();
             LocalDate rentalEnd = rental.getEndDate().isAfter(endDate) ? endDate : rental.getEndDate();
 
-            // Only count days if the rental overlaps with the period
+            // Compter les jours uniquement si la location chevauche la période
             if (!rentalStart.isAfter(rentalEnd)) {
                 long days = ChronoUnit.DAYS.between(rentalStart, rentalEnd) + 1;
                 totalRentedDays += days;
             }
         }
 
-        // Cap at total days in period (handles overlapping rentals)
+        // Plafonner au nombre total de jours dans la période (gère les locations chevauchantes)
         long totalDaysInPeriod = ChronoUnit.DAYS.between(startDate, endDate) + 1;
         return Math.min(totalRentedDays, totalDaysInPeriod);
     }

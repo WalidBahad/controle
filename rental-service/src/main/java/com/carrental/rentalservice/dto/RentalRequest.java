@@ -9,7 +9,7 @@ import jakarta.validation.constraints.FutureOrPresent;
 import java.time.LocalDate;
 
 /**
- * DTO for creating a new rental request.
+ * DTO pour la création d'une nouvelle demande de location.
  */
 @ValidDateRange(startDate = "startDate", endDate = "endDate")
 public class RentalRequest {

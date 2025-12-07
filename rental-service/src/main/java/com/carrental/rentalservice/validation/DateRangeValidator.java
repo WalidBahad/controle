@@ -7,7 +7,7 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.time.LocalDate;
 
 /**
- * Validator implementation for ValidDateRange annotation.
+ * Implémentation du validateur pour l'annotation ValidDateRange.
  */
 public class DateRangeValidator implements ConstraintValidator<ValidDateRange, RentalRequest> {
 
@@ -25,7 +25,7 @@ public class DateRangeValidator implements ConstraintValidator<ValidDateRange, R
         LocalDate endDate = request.getEndDate();
 
         if (startDate == null || endDate == null) {
-            return true; // Let @NotNull handle null validation
+            return true; // Laisser @NotNull gérer la validation nulle
         }
 
         return endDate.isAfter(startDate);

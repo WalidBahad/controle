@@ -1,7 +1,7 @@
 package com.carrental.paymentservice.dto;
 
 /**
- * DTO for payment processing response.
+ * DTO pour la réponse de traitement de paiement.
  */
 public class PaymentResponse {
     private String paymentId;

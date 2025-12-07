@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 /**
- * DTO for payment processing request.
+ * DTO pour la demande de traitement de paiement.
  */
 public class PaymentRequest {
     

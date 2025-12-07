@@ -6,8 +6,8 @@ import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
 /**
- * Rental entity representing a car rental/reservation in the system.
- * Each rental has: id, carId, clientId, startDate, endDate, and status.
+ * Entité de location représentant une location/réservation de voiture dans le système.
+ * Chaque location a : id, carId, clientId, startDate, endDate et status.
  */
 @Entity
 @Table(name = "rentals")
@@ -54,7 +54,7 @@ public class Rental {
         this.status = status;
     }
 
-    // Getters and Setters
+
     public Long getId() {
         return id;
     }
@@ -120,7 +120,7 @@ public class Rental {
     }
 
     /**
-     * Enumeration for rental status.
+     * Énumération pour le statut de la location.
      */
     public enum RentalStatus {
         ACTIVE,

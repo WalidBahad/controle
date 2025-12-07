@@ -11,12 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * REST controller for payment operations.
- * Provides endpoints for processing payments via Stripe or PayPal (mock implementation).
+ * Contrôleur REST pour les opérations de paiement.
+ * Fournit des points de terminaison pour traiter les paiements via Stripe ou PayPal (implémentation fictive).
  */
 @RestController
 @RequestMapping("/api/payments")
-@Tag(name = "Payment Controller", description = "API endpoints for processing payments")
+@Tag(name = "Contrôleur de Paiement", description = "Points de terminaison API pour le traitement des paiements")
 public class PaymentController {
 
     private final PaymentService paymentService;
@@ -26,8 +26,8 @@ public class PaymentController {
     }
 
     @PostMapping("/process")
-    @Operation(summary = "Process payment", 
-               description = "Processes a payment using Stripe or PayPal sandbox (mock implementation)")
+    @Operation(summary = "Traiter le paiement", 
+               description = "Traite un paiement en utilisant Stripe ou le sandbox PayPal (implémentation fictive)")
     public ResponseEntity<PaymentResponse> processPayment(@Valid @RequestBody PaymentRequest request) {
         PaymentResponse response = paymentService.processPayment(request);
         
@@ -39,7 +39,7 @@ public class PaymentController {
     }
 
     @GetMapping("/health")
-    @Operation(summary = "Health check", description = "Check if payment service is running")
+    @Operation(summary = "Vérification de santé", description = "Vérifie si le service de paiement est en cours d'exécution")
     public ResponseEntity<String> health() {
         return ResponseEntity.ok("Payment service is running");
     }

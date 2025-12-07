@@ -16,8 +16,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 /**
- * Service for managing car rentals.
- * Handles business logic including car availability checks and payment processing.
+ * Service de gestion des locations de voitures.
+ * Gère la logique métier, y compris les vérifications de disponibilité des voitures et le traitement des paiements.
  */
 @Service
 public class RentalService {
@@ -35,14 +35,14 @@ public class RentalService {
     }
 
     /**
-     * Create a new rental/reservation.
-     * Checks car availability and processes payment before confirming booking.
+     * Créer une nouvelle location/réservation.
+     * Vérifie la disponibilité de la voiture et traite le paiement avant de confirmer la réservation.
      */
     @Transactional
     public Rental createRental(RentalRequest request) {
-        // Date validations are now handled by @ValidDateRange and @FutureOrPresent annotations
+        // Les validations de dates sont maintenant gérées par les annotations @ValidDateRange et @FutureOrPresent
 
-        // Check car availability via FeignClient
+        // Vérifier la disponibilité de la voiture via FeignClient
         ResponseEntity<Car> carResponse = carServiceClient.getCarById(request.getCarId());
         
         if (carResponse.getStatusCode() != HttpStatus.OK || carResponse.getBody() == null) {
@@ -52,13 +52,13 @@ public class RentalService {
 
         Car car = carResponse.getBody();
 
-        // Check if car is available
+        // Vérifier si la voiture est disponible
         if (!"AVAILABLE".equalsIgnoreCase(car.getStatus())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
                 "Car is not available for rental");
         }
 
-        // Check for overlapping rentals
+        // Vérifier les locations chevauchantes
         List<Rental> overlappingRentals = rentalRepository
             .findActiveRentalsForCarInDateRange(
                 request.getCarId(), 
@@ -71,13 +71,13 @@ public class RentalService {
                 "Car is already rented for the requested dates");
         }
 
-        // Calculate total amount
+        // Calculer le montant total
         long days = ChronoUnit.DAYS.between(request.getStartDate(), request.getEndDate()) + 1;
         Double totalAmount = car.getPricePerDay() * days;
 
-        // Process payment via WebClient
+        // Traiter le paiement via WebClient
         PaymentRequest paymentRequest = new PaymentRequest(
-            "stripe", // Default payment method
+            "stripe", // Méthode de paiement par défaut
             totalAmount,
             request.getClientId(),
             String.format("Rental for car %d (%s %s)", car.getId(), car.getBrand(), car.getModel())
@@ -85,14 +85,14 @@ public class RentalService {
 
         try {
             PaymentResponse paymentResponse = paymentServiceClient.processPayment(paymentRequest)
-                .block(); // Blocking call for synchronous processing
+                .block(); // Appel bloquant pour traitement synchrone
 
             if (paymentResponse == null || !"SUCCESS".equalsIgnoreCase(paymentResponse.getStatus())) {
                 throw new ResponseStatusException(HttpStatus.PAYMENT_REQUIRED, 
                     "Payment processing failed: " + (paymentResponse != null ? paymentResponse.getMessage() : "Unknown error"));
             }
 
-            // Create rental
+            // Créer la location
             Rental rental = new Rental();
             rental.setCarId(request.getCarId());
             rental.setClientId(request.getClientId());
@@ -104,9 +104,9 @@ public class RentalService {
 
             Rental savedRental = rentalRepository.save(rental);
 
-            // Update car status to RENTED
+            // Mettre à jour le statut de la voiture à LOUE
             car.setStatus("RENTED");
-            // Set ID explicitly as it might be null in the response from Spring Data REST
+            // Définir l'ID explicitement car il peut être nul dans la réponse de Spring Data REST
             car.setId(request.getCarId());
             carServiceClient.updateCar(request.getCarId(), car);
 
@@ -121,14 +121,14 @@ public class RentalService {
     }
 
     /**
-     * Get all rentals.
+     * Obtenir toutes les locations.
      */
     public List<Rental> getAllRentals() {
         return rentalRepository.findAll();
     }
 
     /**
-     * Get rental by ID.
+     * Obtenir une location par ID.
      */
     public Rental getRentalById(Long id) {
         return rentalRepository.findById(id)
@@ -137,14 +137,14 @@ public class RentalService {
     }
 
     /**
-     * Get rentals by client ID.
+     * Obtenir les locations par ID client.
      */
     public List<Rental> getRentalsByClientId(String clientId) {
         return rentalRepository.findByClientId(clientId);
     }
 
     /**
-     * Get rentals by car ID.
+     * Obtenir les locations par ID voiture.
      */
     public List<Rental> getRentalsByCarId(Long carId) {
         return rentalRepository.findByCarId(carId);

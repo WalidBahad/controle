@@ -9,22 +9,22 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Repository for Rental entities.
+ * Repository pour les entités de location.
  */
 public interface RentalRepository extends JpaRepository<Rental, Long> {
 
     /**
-     * Find rentals by client ID.
+     * Trouver les locations par ID client.
      */
     List<Rental> findByClientId(String clientId);
 
     /**
-     * Find rentals by car ID.
+     * Trouver les locations par ID voiture.
      */
     List<Rental> findByCarId(Long carId);
 
     /**
-     * Find active rentals for a specific car within a date range.
+     * Trouver les locations actives pour une voiture spécifique dans une plage de dates.
      */
     @Query("SELECT r FROM Rental r WHERE r.carId = :carId " +
            "AND r.status = 'ACTIVE' " +

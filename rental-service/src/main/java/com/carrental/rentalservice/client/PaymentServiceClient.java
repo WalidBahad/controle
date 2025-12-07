@@ -5,13 +5,13 @@ import com.carrental.rentalservice.dto.PaymentResponse;
 import reactor.core.publisher.Mono;
 
 /**
- * WebClient-based service for communicating with payment-service.
- * Using reactive WebClient for non-blocking communication.
+ * Service basé sur WebClient pour communiquer avec payment-service.
+ * Utilise WebClient réactif pour une communication non bloquante.
  */
 public interface PaymentServiceClient {
     
     /**
-     * Process payment through payment-service.
+     * Traiter le paiement via payment-service.
      */
     Mono<PaymentResponse> processPayment(PaymentRequest request);
 }

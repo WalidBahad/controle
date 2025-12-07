@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Global exception handler for rental-service.
- * Provides consistent error responses for API failures.
+ * Gestionnaire global d'exceptions pour le service de location.
+ * Fournit des réponses d'erreur cohérentes pour les échecs d'API.
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {

@@ -10,9 +10,9 @@ import java.util.UUID;
 import java.util.Random;
 
 /**
- * Service for processing payments.
- * Simulates payment processing using Stripe or PayPal sandbox.
- * This is a mock implementation for demonstration purposes.
+ * Service de traitement des paiements.
+ * Simule le traitement des paiements à l'aide de Stripe ou du bac à sable PayPal.
+ * Il s'agit d'une implémentation fictive à des fins de démonstration.
  */
 @Service
 public class PaymentService {
@@ -20,28 +20,28 @@ public class PaymentService {
     private final Random random = new Random();
 
     /**
-     * Process a payment request.
-     * Simulates payment processing with Stripe or PayPal.
+     * Traiter une demande de paiement.
+     * Simule le traitement des paiements avec Stripe ou PayPal.
      * 
-     * @param request Payment request containing method, amount, client ID, and description
-     * @return PaymentResponse with payment ID and status
+     * @param request Demande de paiement contenant la méthode, le montant, l'ID client et la description
+     * @return PaymentResponse avec ID de paiement et statut
      */
     public PaymentResponse processPayment(PaymentRequest request) {
-        // Validate payment method
+        // Valider la méthode de paiement
         String paymentMethod = request.getPaymentMethod().toLowerCase();
         if (!paymentMethod.equals("stripe") && !paymentMethod.equals("paypal")) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
                 "Unsupported payment method. Use 'stripe' or 'paypal'");
         }
 
-        // Simulate payment processing delay
+        // Simuler le délai de traitement du paiement
         try {
-            Thread.sleep(500); // Simulate network delay
+            Thread.sleep(500); // Simuler un délai réseau
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
 
-        // Simulate random payment failures (10% failure rate for demonstration)
+        // Simuler des échecs de paiement aléatoires (taux d'échec de 10% pour la démonstration)
         boolean paymentSuccessful = random.nextDouble() > 0.1;
 
         if (!paymentSuccessful) {
@@ -54,7 +54,7 @@ public class PaymentService {
             );
         }
 
-        // Generate mock payment ID
+        // Générer un ID de paiement fictif
         String paymentId = generatePaymentId(paymentMethod);
 
         return new PaymentResponse(
@@ -67,7 +67,7 @@ public class PaymentService {
     }
 
     /**
-     * Generate a mock payment ID based on the payment method.
+     * Générer un ID de paiement fictif basé sur la méthode de paiement.
      */
     private String generatePaymentId(String paymentMethod) {
         String prefix = paymentMethod.equals("stripe") ? "ch_" : "PP-";

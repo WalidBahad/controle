@@ -9,22 +9,22 @@ import org.springframework.data.rest.core.annotation.RestResource;
 import java.util.List;
 
 /**
- * Spring Data REST repository for Car entities.
- * Automatically exposes CRUD operations via REST API.
+ * Repository Spring Data REST pour les entités de voiture.
+ * Expose automatiquement les opérations CRUD via l'API REST.
  */
 @RepositoryRestResource(collectionResourceRel = "cars", path = "cars")
 public interface CarRepository extends JpaRepository<Car, Long> {
 
     /**
-     * Find cars by status (available/rented).
-     * Exposed at: GET /cars/search/findByStatus?status=AVAILABLE
+     * Trouver les voitures par statut (disponible/loué).
+     * Exposé à : GET /cars/search/findByStatus?status=AVAILABLE
      */
     @RestResource(path = "status", rel = "status")
     List<Car> findByStatus(@Param("status") Car.CarStatus status);
 
     /**
-     * Find cars by brand.
-     * Exposed at: GET /cars/search/findByBrand?brand=Toyota
+     * Trouver les voitures par marque.
+     * Exposé à : GET /cars/search/findByBrand?brand=Toyota
      */
     @RestResource(path = "brand", rel = "brand")
     List<Car> findByBrand(@Param("brand") String brand);

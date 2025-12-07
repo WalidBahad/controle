@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 /**
- * Car entity representing a rental car in the system.
- * Each car has attributes: id, brand, model, year, status, and price per day.
+ * Entité représentant une voiture de location dans le système.
+ * Chaque voiture a : id, brand, model, year, status et price per day.
  */
 @Entity
 @Table(name = "cars")
@@ -49,7 +49,7 @@ public class Car {
         this.pricePerDay = pricePerDay;
     }
 
-    // Getters and Setters
+
     public Long getId() {
         return id;
     }
@@ -99,7 +99,7 @@ public class Car {
     }
 
     /**
-     * Enumeration for car availability status.
+     * Énumération pour le statut de disponibilité de la voiture.
      */
     public enum CarStatus {
         AVAILABLE,

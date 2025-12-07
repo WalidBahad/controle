@@ -1,7 +1,7 @@
 package com.carrental.analyticsservice.dto;
 
 /**
- * DTO representing car occupancy rate statistics.
+ * DTO représentant les statistiques du taux d'occupation des voitures.
  */
 public class OccupancyRate {
     private Long carId;
