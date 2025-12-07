@@ -40,17 +40,7 @@ public class RentalService {
      */
     @Transactional
     public Rental createRental(RentalRequest request) {
-        // Validate dates
-        if (request.getEndDate().isBefore(request.getStartDate()) || 
-            request.getEndDate().isEqual(request.getStartDate())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
-                "End date must be after start date");
-        }
-
-        if (request.getStartDate().isBefore(LocalDate.now())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
-                "Start date cannot be in the past");
-        }
+        // Date validations are now handled by @ValidDateRange and @FutureOrPresent annotations
 
         // Check car availability via FeignClient
         ResponseEntity<Car> carResponse = carServiceClient.getCarById(request.getCarId());
@@ -116,7 +106,9 @@ public class RentalService {
 
             // Update car status to RENTED
             car.setStatus("RENTED");
-            carServiceClient.updateCar(car.getId(), car);
+            // Set ID explicitly as it might be null in the response from Spring Data REST
+            car.setId(request.getCarId());
+            carServiceClient.updateCar(request.getCarId(), car);
 
             return savedRental;
 

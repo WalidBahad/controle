@@ -70,7 +70,7 @@ mvn spring-boot:run
 
 - **Rental Service**: http://localhost:8082
   - API Base: http://localhost:8082/api
-  - Swagger UI: http://localhost:8082/swagger-ui.html
+    - Swagger UI: http://localhost:8082/swagger-ui.html
 
 - **Payment Service**: http://localhost:8083
   - API Base: http://localhost:8083/api
@@ -129,7 +129,7 @@ Each service has its own detailed README:
 
 3. **View Analytics**:
    ```bash
-   GET http://localhost:8084/api/analytics/occupancy?startDate=2024-01-01&endDate=2024-01-31
+   GET http://localhost:8084/api/analytics/occupancy?startDate=2025-12-7&endDate=2025-12-20
    ```
 
 ## Error Handling
